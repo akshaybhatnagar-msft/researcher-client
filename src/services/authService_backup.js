@@ -1,0 +1,23 @@
+// services/authService.js
+
+/**
+ * Get an authentication token for the API using client credentials flow
+ * @returns {Promise<string>} - The authentication token
+ */
+export const getAuthToken = async () => {
+  return "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkNOdjBPSTNSd3FsSEZFVm5hb01Bc2hDSDJYRSIsImtpZCI6IkNOdjBPSTNSd3FsSEZFVm5hb01Bc2hDSDJYRSJ9.eyJhdWQiOiJhcGk6Ly83OWMyYWQ3ZC1jOWI3LTRkM2ItOTViZS1mZGJkNGJlMjcxZDIiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85NDljMjVlNC02YzIyLTQ4M2UtYTFmYS1jYzdkYWM1NTFhOTgvIiwiaWF0IjoxNzQ2NDMzNTE1LCJuYmYiOjE3NDY0MzM1MTUsImV4cCI6MTc0NjQzNzQxNSwiYWlvIjoiazJSZ1lIQSsxbnRYSW1yQndhVFMxN01WRHUrVEFRQT0iLCJhcHBpZCI6ImNiMzYyNTkxLTVlYTItNDU2OS1hOTQ4LTQyYzE1NGE3Y2M3ZSIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzk0OWMyNWU0LTZjMjItNDgzZS1hMWZhLWNjN2RhYzU1MWE5OC8iLCJvaWQiOiJiZDg0NThlMS04ZWEyLTQ5NmQtYTUzMS1iMDVjNTQzMWZlMzEiLCJyaCI6IjEuQVNrQTVDV2NsQ0pzUGtpaC1zeDlyRlVhbUgydHdubTN5VHRObGI3OXZVdmljZEw0QUFBcEFBLiIsInN1YiI6ImJkODQ1OGUxLThlYTItNDk2ZC1hNTMxLWIwNWM1NDMxZmUzMSIsInRpZCI6Ijk0OWMyNWU0LTZjMjItNDgzZS1hMWZhLWNjN2RhYzU1MWE5OCIsInV0aSI6InptME9zX0pyclVtWjdsSXBTb2daQVEiLCJ2ZXIiOiIxLjAifQ.G-IUCa65H4P4gIW5PSs5Qfhzg8y0Pk0lEeYb3JhpNoSh5QeqtYworE-0gkLu1N1fwh9UfVYtfX_LXKVibTFvuKPCKrO3eyGgVs4Ua-CQduOWJay7xW-80ekarq3aM9AXha5JWlVMN3uL4fPrEVyqD3br7LtanETW43dZb9lxWcx62HU2i7LjwJVfRU4piheEpGb5yc53jEkAn8CU7a-GulxfiIoC-L8ewSeuSPX0FpbcpO-XYhoZnEuQ3fuee50hB9nzYjCRdfJ1Nv0xMKyX8rtar6ufi8i_rR77wfpPJd6eEr3277QKRkNIPf4sfCFZUrvMHa3mQC5B_jsSxJVLxA";
+
+};
+
+/**
+ * Check if the client has valid credentials configured
+ * @returns {boolean} - Whether the client has valid credentials
+ */
+export const hasValidCredentials = () => {
+  return !!(
+    process.env.REACT_APP_AZURE_TENANT_ID &&
+    process.env.REACT_APP_AZURE_CLIENT_ID &&
+    process.env.REACT_APP_AZURE_CLIENT_SECRET &&
+    process.env.REACT_APP_AZURE_APP_ID
+  );
+};
