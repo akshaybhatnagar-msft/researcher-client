@@ -1,0 +1,226 @@
+/* components/ResearchResult.css */
+.research-result {
+    background-color: var(--card-background);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  
+  .result-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #f8fafc;
+  }
+  
+  .result-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+  }
+  
+  .result-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .toggle-raw-button {
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .toggle-raw-button:hover {
+    background-color: #374151;
+  }
+  
+  .export-button {
+    background-color: var(--success-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .export-button:hover {
+    background-color: #059669;
+  }
+  
+  .reset-button {
+    background-color: var(--warning-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .reset-button:hover {
+    background-color: #d97706;
+  }
+  
+  .completion-time {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 0.75rem;
+  }
+  
+  .result-content {
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+  
+  .raw-json {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  
+  .markdown-content {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-color);
+  }
+  
+  .markdown-content h1 {
+    font-size: 1.8rem;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .markdown-content h2 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .markdown-content h3 {
+    font-size: 1.25rem;
+    margin: 1.2rem 0 0.8rem;
+  }
+  
+  .markdown-content h4 {
+    font-size: 1.1rem;
+    margin: 1rem 0 0.7rem;
+  }
+  
+  .markdown-content p {
+    margin-bottom: 1rem;
+  }
+  
+  .markdown-content ul, .markdown-content ol {
+    margin: 0.5rem 0 1rem 1.5rem;
+  }
+  
+  .markdown-content li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .markdown-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .markdown-content a:hover {
+    text-decoration: underline;
+  }
+  
+  .markdown-content code {
+    background-color: var(--light-gray);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+  
+  .markdown-content pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  
+  .markdown-content pre code {
+    background-color: transparent;
+    padding: 0;
+    font-size: 0.9rem;
+    color: inherit;
+  }
+  
+  .markdown-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1rem;
+    margin-left: 0;
+    color: var(--text-light);
+    font-style: italic;
+    margin: 1rem 0;
+  }
+  
+  .markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+  }
+  
+  .markdown-content table th,
+  .markdown-content table td {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  
+  .markdown-content table th {
+    background-color: var(--light-gray);
+    font-weight: 600;
+  }
+  
+  .markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1.5rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    .result-header h2 {
+      font-size: 1.25rem;
+    }
+    
+    .result-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .toggle-raw-button,
+    .export-button,
+    .reset-button {
+      width: 100%;
+    }
+    
+    .markdown-content h1 {
+      font-size: 1.5rem;
+    }
+    
+    .markdown-content h2 {
+      font-size: 1.3rem;
+    }
+  }
