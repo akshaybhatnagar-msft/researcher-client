@@ -18,9 +18,15 @@ const api = axios.create({
  * @param {Object} queryData - The query data
  * @returns {Promise<Object>} - Response with task_id
  */
-export const submitQuery = async (token, queryData) => {
+export const submitQuery = async (token, queryData, url) => {
   try {
-    const response = await api.post('/api/query', queryData, {
+    const apiClient = axios.create({
+      baseURL: url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const response = await apiClient.post('/api/query', queryData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -38,9 +44,15 @@ export const submitQuery = async (token, queryData) => {
  * @param {string} taskId - The task ID
  * @returns {Promise<Object>} - Task status
  */
-export const getTaskStatus = async (token, taskId) => {
+export const getTaskStatus = async (token, taskId, url) => {
   try {
-    const response = await api.get(`/api/status/${taskId}`, {
+    const apiClient = axios.create({
+      baseURL: url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const response = await apiClient.get(`/api/status/${taskId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -58,9 +70,15 @@ export const getTaskStatus = async (token, taskId) => {
  * @param {string} taskId - The task ID
  * @returns {Promise<Object>} - Thought process data
  */
-export const getThoughtProcess = async (token, taskId) => {
+export const getThoughtProcess = async (token, taskId, url) => {
   try {
-    const response = await api.get(`/api/thought-process/${taskId}`, {
+    const apiClient = axios.create({
+      baseURL: url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const response = await apiClient.get(`/api/thought-process/${taskId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

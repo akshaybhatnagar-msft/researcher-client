@@ -1,9 +1,10 @@
 // components/ResearchProgress.js
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './ResearchProgress.css';
 
 const ResearchProgress = ({ status, thoughtProcess, toolCalls }) => {
   const progressRef = useRef(null);
+  const [progressPercent, setProgressPercent] = useState(0);
   
   // Auto-scroll to the bottom when new thoughts come in
   useEffect(() => {
@@ -13,7 +14,25 @@ const ResearchProgress = ({ status, thoughtProcess, toolCalls }) => {
   }, [thoughtProcess, toolCalls]);
   
   // Format the progress percentage for display
-  const progressPercent = status?.progress ? Math.round(status.progress * 100) : 0;
+  // Increment progress over 10 minutes
+  useEffect(() => {
+    const totalDuration = 10 * 60 * 1000; // 10 minutes in milliseconds
+    const interval = 1000; // Update every second
+    const increment = 100 / (totalDuration / interval);
+
+    const timer = setInterval(() => {
+      setProgressPercent((prev) => {
+        const nextValue = prev + increment;
+        if (nextValue >= 100) {
+          clearInterval(timer);
+          return 100;
+        }
+        return nextValue;
+      });
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, []);
   
   // Get the status message
   const getStatusMessage = () => {
@@ -50,14 +69,14 @@ const ResearchProgress = ({ status, thoughtProcess, toolCalls }) => {
     if (!toolCall || !toolCall.data || !toolCall.data.length) return null;
     
     const callData = toolCall.data[0];
-    if (callData.function && callData.function.name === 'search') {
+    if (callData.function && (callData.function.name === 'search' || callData.function.name === 'web_search' || callData.function.name === 'browser_use')) {
       try {
         const args = JSON.parse(callData.function.arguments);
         return (
           <div className="tool-call">
             <div className="tool-call-header">
               <span className="tool-icon">🔍</span>
-              <span className="tool-title">Web Search</span>
+              <span className="tool-title">{callData.function.name}</span>
               <span className="tool-timestamp">{formatTimestamp(toolCall.timestamp)}</span>
             </div>
             <div className="tool-call-content">
@@ -69,6 +88,48 @@ const ResearchProgress = ({ status, thoughtProcess, toolCalls }) => {
         return null;
       }
     }
+
+    if (callData.function && callData.function.name === 'python_execute') {
+      try {
+        const args = JSON.parse(callData.function.arguments);
+        return (
+          <div className="tool-call">
+            <div className="tool-call-header">
+              <span className="tool-icon">🐍</span>
+              <span className="tool-title">Python Execute</span>
+              <span className="tool-timestamp">{formatTimestamp(toolCall.timestamp)}</span>
+            </div>
+            <div className="tool-call-content">
+              <p>Query: <strong>{args.query}</strong></p>
+            </div>
+          </div>
+        );
+      } catch (e) {
+        return null;
+      }
+    }
+
+    if (callData.function && callData.function.name === 'terminate') {
+      try {
+        const args = JSON.parse(callData.function.arguments);
+        return (
+          <div className="tool-call">
+            <div className="tool-call-header">
+              <span className="tool-icon">🛑</span>
+              <span className="tool-title">Terminate</span>
+              <span className="tool-timestamp">{formatTimestamp(toolCall.timestamp)}</span>
+            </div>
+            <div className="tool-call-content">
+              <p>Query: <strong>{args.query}</strong></p>
+            </div>
+          </div>
+        );
+      } catch (e) {
+        return null;
+      }
+    }
+
+    
     
     return null;
   };
@@ -85,7 +146,7 @@ const ResearchProgress = ({ status, thoughtProcess, toolCalls }) => {
             ></div>
           </div>
           <div className="progress-label">
-            {getStatusMessage()} ({progressPercent}%)
+            {getStatusMessage()} ({Math.round(progressPercent)}%)
           </div>
         </div>
       </div>

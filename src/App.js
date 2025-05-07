@@ -18,6 +18,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [mcpServer, setMCPServer] = useState('http://localhost:8000'); // Default server URL
   
   // Fetch auth token on component mount
   useEffect(() => {
@@ -70,7 +71,7 @@ function App() {
       // Poll for task status every 2 seconds
       statusInterval = setInterval(async () => {
         try {
-          const status = await getTaskStatus(token, taskId);
+          const status = await getTaskStatus(token, taskId, mcpServer);
           setTaskStatus(status);
           
           // If task is completed or failed, stop polling and set the result
@@ -83,25 +84,25 @@ function App() {
           setError("Failed to fetch task status.");
           console.error("Status polling error:", err);
         }
-      }, 2000);
+      }, 4000);
       
       // Poll for thought process every 1 second
       thoughtInterval = setInterval(async () => {
         try {
-          const thoughtData = await getThoughtProcess(token, taskId);
+          const thoughtData = await getThoughtProcess(token, taskId, mcpServer);
           setThoughtProcess(thoughtData.thought_process);
           setToolCalls(thoughtData.tool_calls);
         } catch (err) {
           console.error("Thought process polling error:", err);
         }
-      }, 1000);
+      }, 4000);
     }
     
     return () => {
       clearInterval(statusInterval);
       clearInterval(thoughtInterval);
     };
-  }, [taskId, token, result]);
+  }, [taskId, token, result, mcpServer]);
   
   const handleSubmitQuery = async (queryData) => {
     if (!token) {
@@ -116,9 +117,17 @@ function App() {
     setThoughtProcess([]);
     setToolCalls([]);
     setResult(null);
+    setMCPServer(queryData.mcpServer || mcpServer); // Use the server from the form or default
     
     try {
-      const response = await submitQuery(token, queryData);
+      const query = {
+        query: queryData.query,
+        system_prompt: queryData.system_prompt,
+        max_tokens: queryData.max_tokens,
+        temperature: queryData.temperature,
+        reasoning_level: queryData.reasoning_level        
+      }
+      const response = await submitQuery(token, query, queryData.mcpServer);
       setTaskId(response.task_id);
     } catch (err) {
       setError("Failed to submit query. Please try again.");

@@ -7,7 +7,6 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 500px;
   }
   
   .progress-header {
@@ -52,7 +51,7 @@
   
   .progress-content {
     flex: 1;
-    padding: 0 1.25rem;
+    padding: 1.25rem 1.25rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;

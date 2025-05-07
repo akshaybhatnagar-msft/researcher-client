@@ -6,7 +6,7 @@ const msalConfig = {
   auth: {
     clientId: process.env.REACT_APP_AZURE_CLIENT_ID,
     // Use 'common' authority endpoint to support multi-tenant login
-    authority: "https://login.microsoftonline.com/common",
+    authority: "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47",
     redirectUri: window.location.origin,
     // Use multiple audiences if needed
     validateAuthority: false

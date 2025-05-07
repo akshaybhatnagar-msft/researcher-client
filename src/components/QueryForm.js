@@ -8,9 +8,10 @@ const QueryForm = ({ onSubmit, isLoading, isDisabled }) => {
     'You are a helpful researcher with access to web search capabilities. Provide detailed, well-structured answers with citations and explanation of your research process.'
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [temperature, setTemperature] = useState(0.7);
+  const [temperature, setTemperature] = useState(1.0);
   const [maxTokens, setMaxTokens] = useState(10000);
   const [reasoningLevel, setReasoningLevel] = useState('high');
+  const [mcpServer, setMCPServer] = useState('http://localhost:8000');
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +23,8 @@ const QueryForm = ({ onSubmit, isLoading, isDisabled }) => {
       system_prompt: systemPrompt,
       temperature,
       max_tokens: maxTokens,
-      reasoning_level: reasoningLevel
+      reasoning_level: reasoningLevel,
+      mcpServer: mcpServer,
     });
   };
   
@@ -87,7 +89,7 @@ const QueryForm = ({ onSubmit, isLoading, isDisabled }) => {
                     step="0.1"
                     value={temperature}
                     onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                    disabled={isDisabled}
+                    disabled={true}
                   />
                   <span>{temperature}</span>
                 </div>
@@ -120,6 +122,18 @@ const QueryForm = ({ onSubmit, isLoading, isDisabled }) => {
                 <option value="low">Basic (Faster)</option>
                 <option value="medium">Standard</option>
                 <option value="high">Thorough (Recommended)</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="reasoning-level">MCP Agent</label>
+              <select
+                id="mcp-server"
+                value={mcpServer}
+                onChange={(e) => setMCPServer(e.target.value)}
+                disabled={isDisabled}
+              >
+                <option value="http://localhost:8001">Open Manus</option>
+                <option value="http://localhost:8000">BFF</option>
               </select>
             </div>
           </div>
