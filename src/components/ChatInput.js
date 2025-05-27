@@ -1,5 +1,5 @@
 // components/ChatInput.js with fixed temperature
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ChatInput.css';
 
 const ChatInput = ({ 
@@ -22,7 +22,7 @@ const ChatInput = ({
   // Temperature is now fixed at 1.0
   const temperature = 1.0;
   const [maxTokens, setMaxTokens] = useState(20000);
-  const [reasoningLevel, setReasoningLevel] = useState('high');
+  const [reasoningLevel, setReasoningLevel] = useState('medium');
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -173,8 +173,8 @@ const ChatInput = ({
                 disabled={isLoading}
               >
                 <option value="low">Basic (Faster)</option>
-                <option value="medium">Standard</option>
-                <option value="high">Thorough (Recommended)</option>
+                <option value="medium">Standard (Recommended)</option>
+                <option value="high">Thorough</option>
               </select>
             </div>
           </div>
@@ -228,9 +228,7 @@ const ChatInput = ({
                   className="tool-select"
                   title="Select Research Tool"
                 >
-                  <option value="openmanus">OpenManus</option>
-                  <option value="bff">BFF</option>
-                  <option value="researcher">Researcher+Sales</option>
+                  <option value="bff">Deep Research</option>
                 </select>
               </div>
             </div>

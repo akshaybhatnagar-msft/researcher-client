@@ -9,7 +9,7 @@ const API_BASE_URLS = {
 };
 
 // Track the active tool
-let activeTool = 'openmanus'; // Default to OpenManus
+let activeTool = 'bff'; // Default to OpenManus
 
 // Create an axios instance with default config
 const api = axios.create({

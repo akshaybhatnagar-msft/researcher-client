@@ -1,6 +1,7 @@
-// App.js with updated API handling
-import React, { useEffect, useState } from 'react';
+// App.js with updated API handling and access control
+import { useEffect, useState } from 'react';
 import './App.css';
+import AccessRequest from './components/AccessRequest'; // We'll create this component
 import ChatInput from './components/ChatInput';
 import ResearchChat from './components/ResearchChat';
 import ResearchSidebar from './components/ResearchSidebar';
@@ -13,6 +14,19 @@ import {
   submitQuery
 } from './services/apiService';
 import { getAuthToken, getCurrentUser, isAuthenticated, signOut } from './services/authService';
+
+// List of approved users who can access the app
+const APPROVED_USERS = [
+  'Akshay Bhatnagar',
+  'Vik Singh',
+  'Navid Azimi',
+  'Gurkan Salk',
+  'Sharoon Srivastava',
+  'Will Genge',
+  'Jesus Rodriguez',
+  'Daniel Anvar'
+  // Add more approved users here
+];
 
 function App() {
   const [token, setToken] = useState(null);
@@ -27,8 +41,9 @@ function App() {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [showThoughtProcess, setShowThoughtProcess] = useState(true);
-  const [selectedTool, setSelectedTool] = useState('openmanus'); // Default to OpenManus
+  const [selectedTool, setSelectedTool] = useState('bff'); // Default to OpenManus
   const [showTaskHistory, setShowTaskHistory] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false); // New state to track access permission
   
   // Fetch auth token on component mount
   useEffect(() => {
@@ -44,6 +59,9 @@ function App() {
           const userInfo = await getCurrentUser();
           setToken(authToken);
           setUser(userInfo);
+          
+          // Check if user has access
+          checkUserAccess(userInfo);
         } else {
           // User isn't authenticated yet, but we don't auto-redirect
           console.log("User is not authenticated");
@@ -73,6 +91,21 @@ function App() {
       clearInterval(tokenRefreshInterval);
     };
   }, []);
+  
+  // Function to check if user has access
+  const checkUserAccess = (userInfo) => {
+    if (!userInfo) return;
+    
+    // Get user's name from the user object
+    const userName = userInfo.name || userInfo.username || '';
+    
+    // Check if user is in the approved list (case insensitive)
+    const hasAccess = APPROVED_USERS.some(
+      approvedName => approvedName.toLowerCase() === userName.toLowerCase()
+    );
+    
+    setHasAccess(hasAccess);
+  };
   
   // Update API service when selected tool changes
   useEffect(() => {
@@ -133,7 +166,6 @@ function App() {
             clearInterval(statusInterval);
           }
         } catch (err) {
-          setError("Failed to fetch task status.");
           console.error("Status polling error:", err);
         }
       }, 2000);
@@ -306,6 +338,7 @@ function App() {
       await signOut();
       setToken(null);
       setUser(null);
+      setHasAccess(false); // Reset access on sign out
       handleReset();
       // Clear messages on sign out
       setMessages([]);
@@ -323,6 +356,9 @@ function App() {
       setToken(authToken);
       setUser(userInfo);
       setError(null);
+      
+      // Check if the user has access
+      checkUserAccess(userInfo);
     } catch (err) {
       console.error("Sign in error:", err);
       setError("Failed to sign in: " + (err.message || "Unknown error"));
@@ -352,7 +388,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1>Microsoft Pipes</h1>
+          <h1>Copilot Apps Deep Research</h1>
         </div>
         <div className="header-actions">
           <div className="user-section">
@@ -383,72 +419,78 @@ function App() {
           <p>Initializing authentication...</p>
         </div>
       ) : user ? (
-        <div className="app-content">
-          <div className="chat-panel">
-            {showTaskHistory ? (
-              <TaskHistory 
-                token={token}
-                getTasks={getTasks}
-                onSelectTask={handleSelectTask}
-                onNewChat={handleNewChat}
-                onClose={() => setShowTaskHistory(false)}
-                activeTool={selectedTool}
-              />
-            ) : (
-              <>
-                <ResearchChat 
-                  messages={messages}
-                  isLoading={!!taskId && !result}
-                />
-                <ChatInput 
-                  onSubmit={handleSubmitQuery}
-                  isLoading={isLoading || (!!taskId && !result)}
-                  onCancel={handleReset}
-                  selectedTool={selectedTool}
-                  onToolChange={handleToolChange}
+        hasAccess ? (
+          // User has access - show the full app
+          <div className="app-content">
+            <div className="chat-panel">
+              {showTaskHistory ? (
+                <TaskHistory 
+                  token={token}
+                  getTasks={getTasks}
+                  onSelectTask={handleSelectTask}
                   onNewChat={handleNewChat}
-                  onShowHistory={toggleTaskHistory}
-                  onClearChat={handleClearChat}
-                  hasMessages={messages.length > 0}
+                  onClose={() => setShowTaskHistory(false)}
+                  activeTool={selectedTool}
                 />
-              </>
-            )}
-          </div>
-          
-          <div className="sidebar-panel">
-            {taskId || result ? (
-              <>
-                <div className="sidebar-header">
-                  <h2>{showThoughtProcess ? 'Research Process' : 'Research Results'}</h2>
-                  <button 
-                    className="toggle-view-button"
-                    onClick={toggleSidebarView}
-                  >
-                    {showThoughtProcess ? 'Show Results' : 'Show Process'}
-                  </button>
+              ) : (
+                <>
+                  <ResearchChat 
+                    messages={messages}
+                    isLoading={!!taskId && !result}
+                  />
+                  <ChatInput 
+                    onSubmit={handleSubmitQuery}
+                    isLoading={isLoading || (!!taskId && !result)}
+                    onCancel={handleReset}
+                    selectedTool={selectedTool}
+                    onToolChange={handleToolChange}
+                    onNewChat={handleNewChat}
+                    onShowHistory={toggleTaskHistory}
+                    onClearChat={handleClearChat}
+                    hasMessages={messages.length > 0}
+                  />
+                </>
+              )}
+            </div>
+            
+            <div className="sidebar-panel">
+              {taskId || result ? (
+                <>
+                  <div className="sidebar-header">
+                    <h2>{showThoughtProcess ? 'Research Process' : 'Research Results'}</h2>
+                    <button 
+                      className="toggle-view-button"
+                      onClick={toggleSidebarView}
+                    >
+                      {showThoughtProcess ? 'Show Results' : 'Show Process'}
+                    </button>
+                  </div>
+                  
+                  <ResearchSidebar 
+                    showThoughtProcess={showThoughtProcess}
+                    thoughtProcess={thoughtProcess}
+                    toolCalls={toolCalls}
+                    result={result}
+                    status={taskStatus}
+                  />
+                </>
+              ) : (
+                <div className="empty-sidebar">
+                  <p>Enter a research question to get started.</p>
+                  <p>You'll see the research process and results here.</p>
                 </div>
-                
-                <ResearchSidebar 
-                  showThoughtProcess={showThoughtProcess}
-                  thoughtProcess={thoughtProcess}
-                  toolCalls={toolCalls}
-                  result={result}
-                  status={taskStatus}
-                />
-              </>
-            ) : (
-              <div className="empty-sidebar">
-                <p>Enter a research question to get started.</p>
-                <p>You'll see the research process and results here.</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          // User does not have access - show the access request form
+          <AccessRequest user={user} />
+        )
       ) : (
         <div className="auth-screen">
           <div className="auth-message">
             <h2>Authentication Required</h2>
-            <p>Please sign in to use Microsoft Pipes.</p>
+            <p>Please sign in to use Copilot Apps Deep Research.</p>
             <button className="sign-in-button-large" onClick={handleSignIn}>Sign In with Azure AD</button>
           </div>
         </div>
