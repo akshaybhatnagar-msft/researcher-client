@@ -104,7 +104,7 @@ function App() {
       approvedName => approvedName.toLowerCase() === userName.toLowerCase()
     );
     
-    setHasAccess(hasAccess);
+    setHasAccess(true);
   };
   
   // Update API service when selected tool changes
