@@ -71,4 +71,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 Works with Claude
 
-<span style="color: blue;">This came from Hello World</span>
+<span style="color: yellow;">This came from Hello World</span>
